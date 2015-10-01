@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="staticcontent" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="staticcontent"
+	   version="1.1">
+
+	<object class="scResource" table="staticcontent_resource" extends="xPDOSimpleObject">
+		<field key="pagetitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="text" phptype="text" null="false" default=""/>
+		<field key="content" dbtype="mediumtext" phptype="string" null="false" default="" />
+		<field key="uri" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+		<field key="hash" dbtype="char" precision="40" phptype="string" null="false" default="" />
+		<field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="web" />
+		<field key="content_type" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="1" />
+		<field key="template" dbtype="int" precision="10" phptype="integer" null="false" default="0" />
+		<field key="resource" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="cacheable" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+		<field key="resource_override" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="0"/>
+		<field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+		<field key="properties" dbtype="mediumtext" phptype="json" null="true" />
+
+		<index alias="pagetitle" name="pagetitle" primary="false" unique="true" type="BTREE">
+			<column key="pagetitle" length="" collation="A" null="false" />
+		</index>
+		<index alias="uri" name="uri" primary="false" unique="true" type="BTREE">
+			<column key="uri" length="" collation="A" null="false" />
+		</index>
+		<index alias="hash" name="hash" primary="false" unique="true" type="BTREE">
+			<column key="hash" length="" collation="A" null="false" />
+		</index>
+		<index alias="context_key" name="context_key" primary="false" unique="false" type="BTREE">
+			<column key="context_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="content_type" name="content_type" primary="false" unique="false" type="BTREE">
+			<column key="content_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="resource" name="resource" primary="false" unique="false" type="BTREE">
+			<column key="resource" length="" collation="A" null="false" />
+		</index>
+		<index alias="cacheable" name="cacheable" primary="false" unique="false" type="BTREE">
+			<column key="cacheable" length="" collation="A" null="false"/>
+		</index>
+		<index alias="resource_override" name="resource_override" primary="false" unique="false" type="BTREE">
+			<column key="resource_override" length="" collation="A" null="false"/>
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE">
+			<column key="active" length="" collation="A" null="false"/>
+		</index>
+
+		<aggregate alias="Resource" class="modResource" local="resource" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="ContentType" class="modContentType" local="content_type" foreign="id" owner="foreign" cardinality="one" />
+		<aggregate alias="Context" class="modContext" local="context_key" foreign="key" owner="foreign" cardinality="one" />
+		<aggregate alias="Template" class="modTemplate" local="template" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+</model>
