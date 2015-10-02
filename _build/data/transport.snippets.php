@@ -3,10 +3,12 @@
 $snippets = array();
 
 $tmp = array(
-	'staticcontent' => array(
-		'file' => 'staticcontent',
+/*
+	'scGetContent' => array(
+		'file' => 'get_content',
 		'description' => '',
-	),
+	),*/
+
 );
 
 foreach ($tmp as $k => $v) {

@@ -1,15 +1,15 @@
 <?php
 require_once(dirname(__FILE__) . '/update.class.php');
 
-class scResourceFromGridProcessor extends scResourceUpdateProcessor
+class scContentFromGridProcessor extends scContentUpdateProcessor
 {
-	public $classKey = 'scResource';
+	public $classKey = 'scContent';
 
 	/** {@inheritDoc} */
 	public static function getInstance(modX &$modx, $className, $properties = array())
 	{
 		/** @var modProcessor $processor */
-		$processor = new scResourceFromGridProcessor($modx, $properties);
+		$processor = new scContentFromGridProcessor($modx, $properties);
 		return $processor;
 	}
 
@@ -30,4 +30,4 @@ class scResourceFromGridProcessor extends scResourceUpdateProcessor
 	}
 }
 
-return 'scResourceFromGridProcessor';
+return 'scContentFromGridProcessor';

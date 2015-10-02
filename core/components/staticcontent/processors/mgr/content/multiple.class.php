@@ -1,8 +1,8 @@
 <?php
 
-class scResourceMultipleProcessor extends modProcessor
+class scContentMultipleProcessor extends modProcessor
 {
-	public $classKey = 'scResource';
+	public $classKey = 'scContent';
 
 	public function process()
 	{
@@ -45,4 +45,4 @@ class scResourceMultipleProcessor extends modProcessor
 	}
 }
 
-return 'scResourceMultipleProcessor';
+return 'scContentMultipleProcessor';

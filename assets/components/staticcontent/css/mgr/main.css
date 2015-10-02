@@ -163,7 +163,7 @@ span.staticcontent-grid-color {
 .x-field-search-chunk-go {right: 31px !important; border-radius: 0 !important;}
 .x-field-search-chunk-go:before {content: '\f009' !important;}
 
-/* payment-context field */
+/* context field */
 .x-field-search-context-clear,
 .x-field-search-context-go {border-left: 1px solid #e4e4e4 !important;}
 .x-field-search-context-clear:hover,
@@ -171,4 +171,31 @@ span.staticcontent-grid-color {
 .x-field-search-context-clear:before {content: '\f00d' !important;}
 .x-field-search-context-go {right: 31px !important; border-radius: 0 !important;}
 .x-field-search-context-go:before {content: '\f0ac' !important;}
+
+/* resourcer field */
+.x-field-staticcontent-resource-clear,
+.x-field-staticcontent-resource-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-staticcontent-resource-clear:hover,
+.x-field-staticcontent-resource-go:hover {border-left-color: transparent !important;}
+.x-field-staticcontent-resource-clear:before {content: '\f00d' !important;}
+.x-field-staticcontent-resource-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-staticcontent-resource-go:before {content: '\f15b' !important;color: green;}
+
+/* resourcer field */
+.x-field-staticcontent-template-clear,
+.x-field-staticcontent-template-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-staticcontent-template-clear:hover,
+.x-field-staticcontent-template-go:hover {border-left-color: transparent !important;}
+.x-field-staticcontent-template-clear:before {content: '\f00d' !important;}
+.x-field-staticcontent-template-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-staticcontent-template-go:before {content: '\f15b' !important;color: green;}
+
+/* resourcer field */
+.x-field-staticcontent-content_type-clear,
+.x-field-staticcontent-content_type-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-staticcontent-content_type-clear:hover,
+.x-field-staticcontent-content_type-go:hover {border-left-color: transparent !important;}
+.x-field-staticcontent-content_type-clear:before {content: '\f00d' !important;}
+.x-field-staticcontent-content_type-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-staticcontent-content_type-go:before {content: '\f15b' !important;color: green;}
 

@@ -2,9 +2,11 @@
 <model package="staticcontent" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="staticcontent"
 	   version="1.1">
 
-	<object class="scResource" table="staticcontent_resource" extends="xPDOSimpleObject">
+	<object class="scContent" table="staticcontent_content" extends="xPDOSimpleObject">
 		<field key="pagetitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
-		<field key="description" dbtype="text" phptype="text" null="false" default=""/>
+		<field key="longtitle" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="description" dbtype="text" phptype="text" null="false" default="" />
+		<field key="introtext" dbtype="text" phptype="string" null="false" default="" />
 		<field key="content" dbtype="mediumtext" phptype="string" null="false" default="" />
 		<field key="uri" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
 		<field key="hash" dbtype="char" precision="40" phptype="string" null="false" default="" />
@@ -19,7 +21,7 @@
 		<field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
 		<field key="properties" dbtype="mediumtext" phptype="json" null="true" />
 
-		<index alias="pagetitle" name="pagetitle" primary="false" unique="true" type="BTREE">
+		<index alias="pagetitle" name="pagetitle" primary="false" unique="false" type="BTREE">
 			<column key="pagetitle" length="" collation="A" null="false" />
 		</index>
 		<index alias="uri" name="uri" primary="false" unique="true" type="BTREE">

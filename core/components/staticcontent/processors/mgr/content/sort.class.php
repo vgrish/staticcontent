@@ -1,9 +1,9 @@
 <?php
 
 // It is adapted code from https://github.com/splittingred/Gallery/blob/a51442648fde1066cf04d46550a04265b1ad67da/core/components/gallery/processors/mgr/item/sort.php
-class scResourceSortProcessor extends modObjectProcessor
+class scContentSortProcessor extends modObjectProcessor
 {
-	public $classKey = 'scResource';
+	public $classKey = 'scContent';
 	public $permission = '';
 
 	/** {@inheritDoc} */
@@ -18,9 +18,9 @@ class scResourceSortProcessor extends modObjectProcessor
 	/** {@inheritDoc} */
 	public function process()
 	{
-		/* @var scResource $source */
+		/* @var scContent $source */
 		$source = $this->modx->getObject($this->classKey, $this->getProperty('source'));
-		/* @var scResource $target */
+		/* @var scContent $target */
 		$target = $this->modx->getObject($this->classKey, $this->getProperty('target'));
 		if (empty($source) || empty($target)) {
 			return $this->modx->error->failure();
@@ -66,4 +66,4 @@ class scResourceSortProcessor extends modObjectProcessor
 	}
 }
 
-return 'scResourceSortProcessor';
+return 'scContentSortProcessor';

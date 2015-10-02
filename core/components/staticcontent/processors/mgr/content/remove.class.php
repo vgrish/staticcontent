@@ -1,8 +1,8 @@
 <?php
 
-class scResourceRemoveProcessor extends modObjectRemoveProcessor
+class scContentRemoveProcessor extends modObjectRemoveProcessor
 {
-	public $classKey = 'scResource';
+	public $classKey = 'scContent';
 	public $languageTopics = array('staticcontent');
 	public $permission = '';
 
@@ -18,11 +18,11 @@ class scResourceRemoveProcessor extends modObjectRemoveProcessor
 	/** {@inheritDoc} */
 	public function beforeRemove()
 	{
-		if (!$this->object->get('editable')) {
+/*		if (!$this->object->get('editable')) {
 			$this->failure($this->modx->lexicon('staticcontent_err_lock'));
-		}
+		}*/
 		return parent::beforeRemove();
 	}
 }
 
-return 'scResourceRemoveProcessor';
+return 'scContentRemoveProcessor';

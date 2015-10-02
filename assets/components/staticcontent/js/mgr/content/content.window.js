@@ -2,7 +2,7 @@ staticcontent.window.CreateContent = function (config) {
     config = config || {};
     Ext.applyIf(config, {
         title: _('create'),
-        width: 550,
+        width: 750,
         autoHeight: true,
         url: staticcontent.config.connector_url,
         action: 'mgr/content/create',
@@ -15,8 +15,6 @@ staticcontent.window.CreateContent = function (config) {
     if (!config.update) {
         config.update = false;
     }
-
-    console.log(config.update);
 
 };
 Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
@@ -44,7 +42,13 @@ Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
         return [{
             xtype: 'hidden',
             name: 'id'
-        }, {
+        },/* {
+            xtype: 'hidden',
+            name: 'context_key'
+        },*//* {
+            xtype: 'hidden',
+            name: 'hash'
+        }, */{
             items: [{
                 layout: 'form',
                 cls: 'modx-panel',
@@ -53,12 +57,12 @@ Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
                     defaults: {msgTarget: 'under',border: false},
                     border: false,
                     items: [{
-                        columnWidth: .49,
+                        columnWidth: .6,
                         border: false,
                         layout: 'form',
                         items: this.getLeftFields(config)
                     }, {
-                        columnWidth: .505,
+                        columnWidth: .4,
                         border: false,
                         layout: 'form',
                         cls: 'right-column',
@@ -69,131 +73,186 @@ Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
         }, {
             xtype: 'xcheckbox',
             hideLabel: true,
-            boxLabel: _('staticcontent_callbacks'),
-            msgTarget: 'under',
-            name: '_callbacks',
+            boxLabel: _('staticcontent_content'),
+            name: 'ch_content',
             checked: false,
+            workCount: 1,
+            listeners: {
+                check: staticcontent.utils.handleChecked,
+                afterrender: staticcontent.utils.handleChecked
+            }
+        }, {
+            xtype: 'textarea',
+            fieldLabel: _('staticcontent_content'),
+            name: 'content',
+            anchor: '99.5%',
+            height: 150,
+            allowBlank: true
+        }, {
+            items: [{
+                layout: 'form',
+                cls: 'modx-panel',
+                items: [{
+                    layout: 'column',
+                    defaults: {msgTarget: 'under',border: false},
+                    border: false,
+                    items: [{
+                        columnWidth: .5,
+                        border: false,
+                        layout: 'form',
+                        items: [{
+                            xtype: 'xdatetime',
+                            cls: 'date-combo',
+                            ctCls: 'date-combo',
+                            dateFormat: 'Y-m-d',
+                            timeFormat: 'H:i',
+                            fieldLabel: _('staticcontent_createdon'),
+                            name: 'createdon',
+                            anchor: '99%',
+                            allowBlank: false
+                        }]
+                    }, {
+                        columnWidth: .5,
+                        border: false,
+                        layout: 'form',
+                        cls: 'right-column',
+                        items: [{
+                            xtype: 'xdatetime',
+                            cls: 'date-combo',
+                            ctCls: 'date-combo',
+                            dateFormat: 'Y-m-d',
+                            timeFormat: 'H:i',
+                            fieldLabel: _('staticcontent_updatedon'),
+                            name: 'updatedon',
+                            anchor: '99%',
+                            allowBlank: false
+                        }]
+                    }]
+                }]
+            }]
+        }];
+    },
+
+    getLeftFields: function (config) {
+        return [{
+            xtype: 'textfield',
+            fieldLabel: _('staticcontent_uri'),
+            name: 'uri',
+            anchor: '99%',
+            allowBlank: false
+        }, /*{
+            xtype: 'displayfield',
+            fieldLabel: _('staticcontent_hash'),
+            msgTarget: 'under',
+            name: 'hash',
+            anchor: '99%'
+        },*/ {
+            xtype: 'textfield',
+            fieldLabel: _('staticcontent_pagetitle'),
+            name: 'pagetitle',
+            anchor: '99%',
+            allowBlank: true
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_longtitle'),
+            checked: false,
+            workCount: 1,
             listeners: {
                 check: staticcontent.utils.handleChecked,
                 afterrender: staticcontent.utils.handleChecked
             }
         }, {
             xtype: 'textfield',
-            fieldLabel: '',
-            name: 'callbacks',
+            fieldLabel: _('staticcontent_longtitle'),
+            name: 'longtitle',
             anchor: '99%',
-            allowBlank: false
-        }, {
-            xtype: 'xcheckbox',
-            hideLabel: true,
-            boxLabel: _('staticcontent_purpose'),
-            name: '_purpose',
-            checked: false,
-            listeners: {
-                check: staticcontent.utils.handleChecked,
-                afterrender: staticcontent.utils.handleChecked
-            }
-        }, {
-            xtype: 'textarea',
-            fieldLabel: _('staticcontent_purpose'),
-            msgTarget: 'under',
-            name: 'purpose',
-            anchor: '99%',
-            height: 50,
             allowBlank: true
         }, {
             xtype: 'xcheckbox',
             hideLabel: true,
-            boxLabel: _('staticcontent_comment'),
-            name: '_comment',
+            boxLabel: _('staticcontent_description'),
             checked: false,
+            workCount: 1,
             listeners: {
                 check: staticcontent.utils.handleChecked,
                 afterrender: staticcontent.utils.handleChecked
             }
         }, {
             xtype: 'textarea',
-            fieldLabel: '',
-            msgTarget: 'under',
-            name: 'comment',
+            fieldLabel: _('staticcontent_description'),
+            name: 'description',
             anchor: '99%',
-            height: 50,
+            allowBlank: true
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_introtext'),
+            checked: false,
+            workCount: 1,
+            listeners: {
+                check: staticcontent.utils.handleChecked,
+                afterrender: staticcontent.utils.handleChecked
+            }
+        }, {
+            xtype: 'textarea',
+            fieldLabel: _('staticcontent_introtext'),
+            name: 'introtext',
+            anchor: '99%',
             allowBlank: true
         }];
     },
 
-    getLeftFields: function (config) {
-        return [{
-            xtype: 'staticcontent-combo-client',
-            custm: true,
-            clear: true,
-            fieldLabel: _('staticcontent_sender'),
-            msgTarget: 'under',
-            name: 'sender',
-            anchor: '99%',
-            allowBlank: true,
-            disabled: config.update
-        }, {
-            xtype: 'numberfield',
-            fieldLabel: _('staticcontent_sum'),
-            msgTarget: 'under',
-            name: 'sum',
-            anchor: '99%',
-            allowBlank: true,
-            disabled: config.update
-        }, {
-            xtype: 'staticcontent-combo-payment-option',
-            custm: true,
-            clear: true,
-            fieldLabel: _('staticcontent_payment'),
-            msgTarget: 'under',
-            name: 'payment',
-            anchor: '99%',
-            allowBlank: false,
-            disabled: config.update
-        }];
-    },
+    //content_type
 
     getRightFields: function (config) {
         return [{
-            xtype: 'staticcontent-combo-client',
+            xtype: 'staticcontent-combo-content_type',
             custm: true,
             clear: true,
-            fieldLabel: _('staticcontent_recipient'),
-            msgTarget: 'under',
-/*            blankText: '',
-            invalidText: '',*/
-            name: 'recipient',
+            fieldLabel: _('staticcontent_content_type'),
+            name: 'content_type',
             anchor: '99%',
-            allowBlank: false,
-            disabled: config.update
+            allowBlank: true
         }, {
-            xtype: 'numberfield',
-            fieldLabel: _('staticcontent_tax'),
-            msgTarget: 'under',
-            name: 'tax',
-            anchor: '99%',
-            allowBlank: true,
-            disabled: true
-        }, {
-            xtype: 'staticcontent-combo-request-status',
+            xtype: 'staticcontent-combo-template',
             custm: true,
             clear: true,
-            fieldLabel: _('staticcontent_status'),
-            msgTarget: 'under',
-            name: 'status',
+            fieldLabel: _('staticcontent_template'),
+            name: 'template',
             anchor: '99%',
-            allowBlank: false,
-            disabled: !config.update
+            allowBlank: true
         }, {
-            xtype: 'staticcontent-combo-context',
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_resource_override'),
+            name: 'resource_override',
+            checked: false,
+            workCount: 1,
+            listeners: {
+                check: staticcontent.utils.handleChecked,
+                afterrender: staticcontent.utils.handleChecked
+            }
+        }, {
+            xtype: 'staticcontent-combo-resource',
             custm: true,
             clear: true,
-            fieldLabel: _('staticcontent_context'),
-            msgTarget: 'under',
-            name: 'context',
+            fieldLabel: _('staticcontent_resource'),
+            name: 'resource',
             anchor: '99%',
-            allowBlank: false
+            allowBlank: true
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_cacheable'),
+            name: 'cacheable',
+            checked: false
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_active'),
+            name: 'active',
+            checked: false
         }];
     }
 

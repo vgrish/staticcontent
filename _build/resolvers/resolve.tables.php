@@ -12,7 +12,7 @@ if ($object->xpdo) {
 
 			$manager = $modx->getManager();
 			$objects = array(
-				'scResource',
+				'scContent',
 			);
 			foreach ($objects as $tmp) {
 				$manager->createObjectContainer($tmp);

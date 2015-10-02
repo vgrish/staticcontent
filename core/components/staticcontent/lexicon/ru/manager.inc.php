@@ -78,6 +78,23 @@ $_lang['staticcontent_color'] = 'Цвет';
 $_lang['staticcontent_context'] = 'Контекст';
 $_lang['staticcontent_status'] = 'Статус';
 
+$_lang['staticcontent_pagetitle'] = 'Заголовок';
+$_lang['staticcontent_longtitle'] = 'Расширенный заголовок';
+$_lang['staticcontent_description'] = 'Описание';
+$_lang['staticcontent_introtext'] = 'Аннотация';
+$_lang['staticcontent_content'] = 'Содержимое';
+$_lang['staticcontent_uri'] = 'Uri';
+$_lang['staticcontent_hash'] = 'Hash';
+$_lang['staticcontent_template'] = 'Шаблон';
+$_lang['staticcontent_resource'] = 'Ресурс';
+$_lang['staticcontent_context_key'] = 'Контекст';
+$_lang['staticcontent_content_type'] = 'Тип содержимого';
+$_lang['staticcontent_createdon'] = 'Создан';
+$_lang['staticcontent_updatedon'] = 'Обновлен';
+$_lang['staticcontent_cacheable'] = 'Кэшируемый';
+$_lang['staticcontent_resource'] = 'Ресурс';
+$_lang['staticcontent_resource_override'] = 'Заменить на ресурс';
+
 
 // action
 $_lang['staticcontent_action_active'] = 'Включить';

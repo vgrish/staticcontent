@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Get a list of scResource
+ * Get a list of scContent
  */
-class scResourceGetListProcessor extends modObjectGetListProcessor
+class scContentGetListProcessor extends modObjectGetListProcessor
 {
-	public $objectType = 'scResource';
-	public $classKey = 'scResource';
-	public $defaultSortField = 'rank';
+	public $objectType = 'scContent';
+	public $classKey = 'scContent';
+	public $defaultSortField = 'id';
 	public $defaultSortDirection = 'ASC';
 	public $languageTopics = array('default', 'staticcontent');
 	public $permission = '';
@@ -42,7 +42,7 @@ class scResourceGetListProcessor extends modObjectGetListProcessor
 			if ($requestId = $this->getProperty('request_id')) {
 				/* @var psRequest $request */
 				if ($request = $this->modx->getObject('psRequest', $requestId)) {
-					/* @var scResource $status */
+					/* @var scContent $status */
 					$status = $request->getOne('Status');
 					if ($status->get('final') == 1) {
 						$c->where(array('id' => $status->get('id')));
@@ -117,21 +117,18 @@ class scResourceGetListProcessor extends modObjectGetListProcessor
 			);
 		}
 
-		if ($array['editable']) {
-			// Remove
-			$array['actions'][] = array(
-				'cls' => '',
-				'icon' => "$icon $icon-trash-o red",
-				'title' => $this->modx->lexicon('staticcontent_action_remove'),
-				'action' => 'remove',
-				'button' => true,
-				'menu' => true,
-			);
-		}
+		$array['actions'][] = array(
+			'cls' => '',
+			'icon' => "$icon $icon-trash-o red",
+			'title' => $this->modx->lexicon('staticcontent_action_remove'),
+			'action' => 'remove',
+			'button' => true,
+			'menu' => true,
+		);
 
 		return $array;
 	}
 
 }
 
-return 'scResourceGetListProcessor';
+return 'scContentGetListProcessor';

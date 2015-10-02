@@ -1,13 +1,15 @@
 <?php
-$xpdo_meta_map['scResource']= array (
+$xpdo_meta_map['scContent']= array (
   'package' => 'staticcontent',
   'version' => '1.1',
-  'table' => 'staticcontent_resource',
+  'table' => 'staticcontent_content',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
     'pagetitle' => '',
+    'longtitle' => '',
     'description' => '',
+    'introtext' => '',
     'content' => '',
     'uri' => '',
     'hash' => '',
@@ -32,10 +34,25 @@ $xpdo_meta_map['scResource']= array (
       'null' => false,
       'default' => '',
     ),
+    'longtitle' => 
+    array (
+      'dbtype' => 'varchar',
+      'precision' => '255',
+      'phptype' => 'string',
+      'null' => false,
+      'default' => '',
+    ),
     'description' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'text',
+      'null' => false,
+      'default' => '',
+    ),
+    'introtext' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
       'null' => false,
       'default' => '',
     ),
@@ -145,7 +162,7 @@ $xpdo_meta_map['scResource']= array (
     array (
       'alias' => 'pagetitle',
       'primary' => false,
-      'unique' => true,
+      'unique' => false,
       'type' => 'BTREE',
       'columns' => 
       array (

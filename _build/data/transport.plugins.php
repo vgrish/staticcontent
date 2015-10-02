@@ -2,15 +2,16 @@
 
 $plugins = array();
 
-$tmp = array(/*
-	'staticcontent' => array(
+$tmp = array(
+
+	/*'StaticContent' => array(
 		'file' => 'staticcontent',
 		'description' => '',
 		'events' => array(
-			'OnManagerPageInit' => array()
+			//'OnManagerPageInit' => array()
 		)
-	)
-	*/
+	)*/
+
 );
 
 foreach ($tmp as $k => $v) {

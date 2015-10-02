@@ -1,11 +1,11 @@
 <?php
 
-class scResourceSetPropertyProcessor extends modObjectUpdateProcessor
+class scContentSetPropertyProcessor extends modObjectUpdateProcessor
 {
-	/** @var scResource $object */
+	/** @var scContent $object */
 	public $object;
-	public $objectType = 'scResource';
-	public $classKey = 'scResource';
+	public $objectType = 'scContent';
+	public $classKey = 'scContent';
 	public $languageTopics = array('staticcontent');
 	public $permission = '';
 
@@ -47,4 +47,4 @@ class scResourceSetPropertyProcessor extends modObjectUpdateProcessor
 	}
 }
 
-return 'scResourceSetPropertyProcessor';
+return 'scContentSetPropertyProcessor';

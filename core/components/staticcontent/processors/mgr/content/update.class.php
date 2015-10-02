@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Update an scResource
+ * Update an scContent
  */
-class scResourceUpdateProcessor extends modObjectUpdateProcessor
+class scContentUpdateProcessor extends modObjectUpdateProcessor
 {
-	public $objectType = 'scResource';
-	public $classKey = 'scResource';
+	public $objectType = 'scContent';
+	public $classKey = 'scContent';
 	public $languageTopics = array('staticcontent');
 	public $permission = '';
 
@@ -48,4 +48,4 @@ class scResourceUpdateProcessor extends modObjectUpdateProcessor
 	}
 }
 
-return 'scResourceUpdateProcessor';
+return 'scContentUpdateProcessor';

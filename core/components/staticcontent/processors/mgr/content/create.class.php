@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Create an scResource
+ * Create an scContent
  */
-class scResourceCreateProcessor extends modObjectCreateProcessor
+class scContentCreateProcessor extends modObjectCreateProcessor
 {
-	public $objectType = 'scResource';
-	public $classKey = 'scResource';
+	public $objectType = 'scContent';
+	public $classKey = 'scContent';
 	public $languageTopics = array('staticcontent');
 	public $permission = '';
 
@@ -15,11 +15,18 @@ class scResourceCreateProcessor extends modObjectCreateProcessor
 	 */
 	public function beforeSet()
 	{
-		$name = trim($this->getProperty('name'));
-		if (empty($name)) {
-			$this->modx->error->addField('name', $this->modx->lexicon('staticcontent_err_name'));
-		} elseif ($this->modx->getCount($this->classKey, array('name' => $name))) {
-			$this->modx->error->addField('name', $this->modx->lexicon('staticcontent_err_ae'));
+		$uri = mb_strtolower(trim($this->getProperty('uri')), 'UTF-8');
+		$this->setProperty('uri', $uri);
+		if (empty($uri)) {
+			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_uri'));
+		} elseif ($this->modx->getCount($this->classKey, array('uri' => $uri))) {
+			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
+		}
+
+		$hash = $this->getProperty('hash', md5($uri));
+		$this->setProperty('hash', $hash);
+		if ($this->modx->getCount($this->classKey, array('hash' => $hash))) {
+			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
 		}
 
 		return parent::beforeSet();
@@ -27,4 +34,4 @@ class scResourceCreateProcessor extends modObjectCreateProcessor
 
 }
 
-return 'scResourceCreateProcessor';
+return 'scContentCreateProcessor';

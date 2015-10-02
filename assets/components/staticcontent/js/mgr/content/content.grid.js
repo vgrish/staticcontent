@@ -127,43 +127,43 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
         });
 
         tbar.push('->');
-       /* tbar.push({
-            xtype: 'staticcontent-combo-operation-status',
-            width: 210,
-            custm: true,
-            clear: true,
-            addall: true,
-            description: _('staticcontent_description_operation_status'),
-            value: 1,
-            listeners: {
-                select: {
-                    fn: this._filterByContentStatus,
-                    scope: this
-                }
-            }
-        });
+        /* tbar.push({
+         xtype: 'staticcontent-combo-operation-status',
+         width: 210,
+         custm: true,
+         clear: true,
+         addall: true,
+         description: _('staticcontent_description_operation_status'),
+         value: 1,
+         listeners: {
+         select: {
+         fn: this._filterByContentStatus,
+         scope: this
+         }
+         }
+         });
 
-        if (1 != MODx.config.staticcontent_content_field_search_disable) {
-            tbar.push({
-                xtype: 'staticcontent-field-search',
-                width: 210,
-                listeners: {
-                    search: {
-                        fn: function (field) {
-                            this._doSearch(field);
-                        },
-                        scope: this
-                    },
-                    clear: {
-                        fn: function (field) {
-                            field.setValue('');
-                            this._clearSearch();
-                        },
-                        scope: this
-                    }
-                }
-            });
-        }*/
+         if (1 != MODx.config.staticcontent_content_field_search_disable) {
+         tbar.push({
+         xtype: 'staticcontent-field-search',
+         width: 210,
+         listeners: {
+         search: {
+         fn: function (field) {
+         this._doSearch(field);
+         },
+         scope: this
+         },
+         clear: {
+         fn: function (field) {
+         field.setValue('');
+         this._clearSearch();
+         },
+         scope: this
+         }
+         }
+         });
+         }*/
 
         return tbar;
     },
@@ -201,23 +201,23 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
 //            },
 
             /*username: {
-                width: 50,
-                sortable: true,
-                renderer: function (value, metaData, record) {
-                    return staticcontent.utils.userLink(value, record['data']['id'])
-                }
-            },
-            email: {
-                width: 50,
-                sortable: true,
-                *//*     editor: {
-                 xtype: 'staticcontent-combo-file-type'
-                 },
-                 renderer: staticcontent.utils.renderFileType*//*
-                renderer: function (value, metaData, record) {
-                    return staticcontent.utils.userLink(value, record['data']['id'])
-                }
-            },*/
+             width: 50,
+             sortable: true,
+             renderer: function (value, metaData, record) {
+             return staticcontent.utils.userLink(value, record['data']['id'])
+             }
+             },
+             email: {
+             width: 50,
+             sortable: true,
+             *//*     editor: {
+             xtype: 'staticcontent-combo-file-type'
+             },
+             renderer: staticcontent.utils.renderFileType*//*
+             renderer: function (value, metaData, record) {
+             return staticcontent.utils.userLink(value, record['data']['id'])
+             }
+             },*/
             //createdon: {
             //    width: 25,
             //    sortable: true,
@@ -318,18 +318,18 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
         })
     },
 
-    /*    removeSet: function() {
-     Ext.MessageBox.confirm(
-     _('staticcontent_action_remove'),
-     _('staticcontent_action_remove_confirm'),
-     function(val) {
-     if (val == 'yes') {
-     this.setAction('remove');
-     }
-     },
-     this
-     );
-     },*/
+    remove: function () {
+        Ext.MessageBox.confirm(
+            _('staticcontent_action_remove'),
+            _('staticcontent_confirm_remove'),
+            function (val) {
+                if (val == 'yes') {
+                    this.setAction('remove');
+                }
+            },
+            this
+        );
+    },
 
     activeDisabled: function (btn, e) {
         this.setAction('setproperty', 'disabled', 1);
@@ -349,7 +349,10 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
 
     createContent: function (btn, e) {
         var record = {
-            notify: 0
+            ch_content: 1,
+            content_type: 1,
+            cacheable: 1,
+            active: 1
         };
         var w = MODx.load({
             xtype: 'staticcontent-content-window-create',
@@ -366,11 +369,11 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
         w.show(e.target);
     },
 
-    sendNotify: function() {
+    sendNotify: function () {
         Ext.MessageBox.confirm(
             _('staticcontent_action_notify'),
             _('staticcontent_confirm_send'),
-            function(val) {
+            function (val) {
                 if (val == 'yes') {
                     this.setAction('sendnotify', 'false', 0);
                 }
@@ -450,7 +453,7 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
         });
     },
 
-    _filterByContentStatus: function(cb) {
+    _filterByContentStatus: function (cb) {
         this.getStore().baseParams[cb.hiddenName] = cb.value;
         this.getBottomToolbar().changePage(1);
     },

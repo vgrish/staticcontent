@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Get an scResource
+ * Get an scContent
  */
-class scResourceGetProcessor extends modObjectGetProcessor
+class scContentGetProcessor extends modObjectGetProcessor
 {
-	public $objectType = 'scResource';
-	public $classKey = 'scResource';
+	public $objectType = 'scContent';
+	public $classKey = 'scContent';
 	public $languageTopics = array('staticcontent');
 	public $permission = '';
 
@@ -28,4 +28,4 @@ class scResourceGetProcessor extends modObjectGetProcessor
 
 }
 
-return 'scResourceGetProcessor';
+return 'scContentGetProcessor';
