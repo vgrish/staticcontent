@@ -96,9 +96,10 @@ class staticcontent
 	public function getContentFields()
 	{
 		$gridFields = array_map('trim', explode(',', $this->getOption('content_grid_fields', null,
-			'id,username,email,createdon,updatedon,disabled', true)));
+			'id,uri,template,content_type,resource', true)));
 		$gridFields = array_values(array_unique(array_merge($gridFields, array(
-			'id', 'username', 'email', 'createdon', 'updatedon', 'disabled', 'deleted', 'owner', 'properties', 'actions'))));
+			'id', 'uri', 'hash', 'template', 'content_type',
+			'cacheable', 'resource_override', 'properties', 'actions'))));
 		return $gridFields;
 	}
 

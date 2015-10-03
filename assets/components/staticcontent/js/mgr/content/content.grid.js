@@ -86,7 +86,7 @@ staticcontent.grid.Content = function (config) {
     });
     staticcontent.grid.Content.superclass.constructor.call(this, config);
     this.getStore().sortInfo = {
-        field: 'id',
+        field: 'createdon',
         direction: 'DESC'
     };
 };
@@ -108,15 +108,20 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
                 cls: 'staticcontent-cogs',
                 handler: this.createContent,
                 scope: this
+            }, {
+                text: '<i class="fa fa-trash-o red"></i> ' + _('staticcontent_action_remove'),
+                cls: 'staticcontent-cogs',
+                handler: this.remove,
+                scope: this
             }, '-', {
                 text: '<i class="fa fa-toggle-on green"></i> ' + _('staticcontent_action_active'),
                 cls: 'staticcontent-cogs',
-                handler: this.inactiveDisabled,
+                handler: this.active,
                 scope: this
             }, {
                 text: '<i class="fa fa-toggle-off red"></i> ' + _('staticcontent_action_inactive'),
                 cls: 'staticcontent-cogs',
-                handler: this.activeDisabled,
+                handler: this.inactive,
                 scope: this
             }]
         });
@@ -143,27 +148,28 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
          }
          });
 
-         if (1 != MODx.config.staticcontent_content_field_search_disable) {
-         tbar.push({
-         xtype: 'staticcontent-field-search',
-         width: 210,
-         listeners: {
-         search: {
-         fn: function (field) {
-         this._doSearch(field);
-         },
-         scope: this
-         },
-         clear: {
-         fn: function (field) {
-         field.setValue('');
-         this._clearSearch();
-         },
-         scope: this
-         }
-         }
-         });
-         }*/
+         */
+        if (1 != MODx.config.staticcontent_content_field_search_disable) {
+            tbar.push({
+                xtype: 'staticcontent-field-search',
+                width: 210,
+                listeners: {
+                    search: {
+                        fn: function (field) {
+                            this._doSearch(field);
+                        },
+                        scope: this
+                    },
+                    clear: {
+                        fn: function (field) {
+                            field.setValue('');
+                            this._clearSearch();
+                        },
+                        scope: this
+                    }
+                }
+            });
+        }
 
         return tbar;
     },
@@ -173,63 +179,80 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
 
         var add = {
             id: {
-                width: 10,
+                width: 5,
                 sortable: true
             },
-//            num: {
-//                width: 15,
-//                sortable: true,
-//                renderer: staticcontent.utils.renderRequestNum
-//            },
-///*            rid: {
-//                width: 25,
-//                sortable: true,
-//                renderer: staticcontent.utils.renderRequestLink
-//            },*/
-//            aid: {
-//                width: 25,
-//                sortable: true
-//            },
-//            sum: {
-//                width: 15,
-//                sortable: true
-//            },
-//            status: {
-//                width: 15,
-//                sortable: true,
-//                renderer: staticcontent.utils.renderContentStatus
-//            },
-
-            /*username: {
-             width: 50,
-             sortable: true,
-             renderer: function (value, metaData, record) {
-             return staticcontent.utils.userLink(value, record['data']['id'])
-             }
-             },
-             email: {
-             width: 50,
-             sortable: true,
-             *//*     editor: {
-             xtype: 'staticcontent-combo-file-type'
-             },
-             renderer: staticcontent.utils.renderFileType*//*
-             renderer: function (value, metaData, record) {
-             return staticcontent.utils.userLink(value, record['data']['id'])
-             }
-             },*/
-            //createdon: {
-            //    width: 25,
-            //    sortable: true,
-            //    renderer: staticcontent.utils.formatDate
-            //},
-            //updatedon: {
-            //    width: 25,
-            //    sortable: true,
-            //    renderer: staticcontent.utils.formatDate
-            //},
+            uri: {
+                width: 25,
+                sortable: true,
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false
+                }
+            },
+            pagetitle: {
+                width: 25,
+                sortable: true
+            },
+            content_type: {
+                width: 25,
+                sortable: true,
+                editor: {
+                    xtype: 'staticcontent-combo-content_type',
+                    custm: true,
+                    clear: true,
+                    allowBlank: false
+                },
+                renderer: function (value, metaData, record) {
+                    return staticcontent.utils.renderReplace(value, record['json']['content_type_name'])
+                }
+            },
+            context_key: {
+                width: 15,
+                sortable: true,
+                editor: {
+                    xtype: 'staticcontent-combo-context',
+                    custm: true,
+                    clear: true,
+                    allowBlank: false
+                }
+            },
+            template: {
+                width: 25,
+                sortable: true,
+                editor: {
+                    xtype: 'staticcontent-combo-template',
+                    custm: true,
+                    clear: true
+                },
+                renderer: function (value, metaData, record) {
+                    return staticcontent.utils.renderReplace(value, record['json']['template_name'])
+                }
+            },
+            resource: {
+                width: 25,
+                sortable: true,
+                editor: {
+                    xtype: 'staticcontent-combo-resource',
+                    custm: true,
+                    clear: true
+                },
+                renderer: function (value, metaData, record) {
+                    return staticcontent.utils.renderReplace(value, record['json']['resource_name'])
+                }
+            },
+            createdon: {
+                width: 25,
+                sortable: true,
+                renderer: staticcontent.utils.formatDate
+            },
+            updatedon: {
+                width: 25,
+                sortable: true,
+                renderer: staticcontent.utils.formatDate
+            },
             actions: {
-                width: 10,
+                width: 25,
                 sortable: false,
                 renderer: staticcontent.utils.renderActions,
                 id: 'actions'
@@ -331,16 +354,12 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
         );
     },
 
-    activeDisabled: function (btn, e) {
-        this.setAction('setproperty', 'disabled', 1);
+    active: function (btn, e) {
+        this.setAction('setproperty', 'active', 1);
     },
 
-    inactiveDisabled: function (btn, e) {
-        this.setAction('setproperty', 'disabled', 0);
-    },
-
-    deleteContent: function (btn, e) {
-        this.setAction('setproperty', 'deleted', 1);
+    inactive: function (btn, e) {
+        this.setAction('setproperty', 'active', 0);
     },
 
     updateContent: function (btn, e) {
@@ -399,8 +418,15 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
             listeners: {
                 success: {
                     fn: function (r) {
+                        var record = r.object;
+                        if (!!record.properties) {
+                            record.properties = Ext.util.JSON.encode(record.properties);
+                        }
                         var w = MODx.load({
                             xtype: 'staticcontent-content-window-create',
+                            title: _('update'),
+                            action: 'mgr/content/update',
+                            update: true,
                             record: r,
                             listeners: {
                                 success: {
@@ -411,7 +437,7 @@ Ext.extend(staticcontent.grid.Content, MODx.grid.Grid, {
                             }
                         });
                         w.reset();
-                        w.setValues(r.object);
+                        w.setValues(record);
                         w.show(e.target);
                     }, scope: this
                 }

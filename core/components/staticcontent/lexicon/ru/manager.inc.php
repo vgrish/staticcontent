@@ -26,7 +26,11 @@ $_lang['staticcontent_header_status'] = '<i class="fa fa-heartbeat"></i>';
 $_lang['staticcontent_header_payment'] = '<i class="fa fa-ticket"></i>';
 $_lang['staticcontent_header_color'] = '<i class="fa fa-adjust"></i>';
 $_lang['staticcontent_header_context'] = '<i class="fa fa-globe"></i>';
-
+$_lang['staticcontent_header_context_key'] = '<i class="fa fa-globe"></i>';
+$_lang['staticcontent_header_template'] = '<i class="fa fa-columns"></i>';
+$_lang['staticcontent_header_content_type'] = '<i class="fa fa-file-text-o"></i>';
+$_lang['staticcontent_header_pagetitle'] = '<i class="fa fa-info"></i>';
+$_lang['staticcontent_header_uri'] = '<i class="fa fa-link"></i>';
 
 // tooltip
 $_lang['staticcontent_tooltip_id'] = 'Id';
@@ -54,6 +58,13 @@ $_lang['staticcontent_tooltip_status'] = 'Статус';
 $_lang['staticcontent_tooltip_payment'] = 'Оплата';
 $_lang['staticcontent_tooltip_color'] = 'Цвет';
 $_lang['staticcontent_tooltip_context'] = 'Контекст';
+$_lang['staticcontent_tooltip_context_key'] = 'Контекст';
+$_lang['staticcontent_tooltip_template'] = 'Шаблон';
+$_lang['staticcontent_tooltip_content_type'] = 'Тип содержимого';
+$_lang['staticcontent_tooltip_pagetitle'] = 'Заголовок';
+$_lang['staticcontent_tooltip_uri'] = 'Uri';
+
+
 
 
 $_lang['staticcontent_name'] = 'Имя';
@@ -94,6 +105,7 @@ $_lang['staticcontent_updatedon'] = 'Обновлен';
 $_lang['staticcontent_cacheable'] = 'Кэшируемый';
 $_lang['staticcontent_resource'] = 'Ресурс';
 $_lang['staticcontent_resource_override'] = 'Заменить на ресурс';
+$_lang['staticcontent_properties'] = 'Свойства';
 
 
 // action

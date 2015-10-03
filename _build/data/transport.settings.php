@@ -4,7 +4,11 @@ $settings = array();
 
 $tmp = array(
 
-
+	'content_grid_fields' => array(
+		'value' => 'id,uri,template,content_type,resource',
+		'xtype' => 'textfield',
+		'area' => 'staticcontent_temp',
+	),
 
 
 	//временные

@@ -199,3 +199,11 @@ span.staticcontent-grid-color {
 .x-field-staticcontent-content_type-go {right: 31px !important; border-radius: 0 !important;}
 .x-field-staticcontent-content_type-go:before {content: '\f15b' !important;color: green;}
 
+/* context field */
+.x-field-search-context-clear,
+.x-field-search-context-go {border-left: 1px solid #e4e4e4 !important;}
+.x-field-search-context-clear:hover,
+.x-field-search-context-go:hover {border-left-color: transparent !important;}
+.x-field-search-context-clear:before {content: '\f00d' !important;}
+.x-field-search-context-go {right: 31px !important; border-radius: 0 !important;}
+.x-field-search-context-go:before {content: '\f0ac' !important;}

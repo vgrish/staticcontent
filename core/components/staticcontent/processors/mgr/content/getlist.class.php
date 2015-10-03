@@ -7,8 +7,8 @@ class scContentGetListProcessor extends modObjectGetListProcessor
 {
 	public $objectType = 'scContent';
 	public $classKey = 'scContent';
-	public $defaultSortField = 'id';
-	public $defaultSortDirection = 'ASC';
+	public $defaultSortField = 'createdon';
+	public $defaultSortDirection = 'DESC';
 	public $languageTopics = array('default', 'staticcontent');
 	public $permission = '';
 
@@ -35,14 +35,25 @@ class scContentGetListProcessor extends modObjectGetListProcessor
 	 */
 	public function prepareQueryBeforeCount(xPDOQuery $c)
 	{
+		$c->leftJoin('modResource', 'modResource', 'modResource.id = scContent.resource');
+		$c->leftJoin('modContentType', 'modContentType', 'modContentType.id = scContent.content_type');
+		$c->leftJoin('modTemplate', 'modTemplate', 'modTemplate.id = scContent.template');
 
-		if ($this->getProperty('combo')) {
+
+		$c->select($this->modx->getSelectColumns('scContent', 'scContent'));
+		$c->select(array(
+			'resource_name' => 'modResource.pagetitle',
+			'content_type_name' => 'modContentType.name',
+			'template_name' => 'modTemplate.templatename',
+		));
+
+/*		if ($this->getProperty('combo')) {
 			$c->select('id,name');
 			$c->where(array('active' => 1));
 			if ($requestId = $this->getProperty('request_id')) {
-				/* @var psRequest $request */
+
 				if ($request = $this->modx->getObject('psRequest', $requestId)) {
-					/* @var scContent $status */
+
 					$status = $request->getOne('Status');
 					if ($status->get('final') == 1) {
 						$c->where(array('id' => $status->get('id')));
@@ -51,13 +62,17 @@ class scContentGetListProcessor extends modObjectGetListProcessor
 					}
 				}
 			}
-		}
+		}*/
 
 		$query = trim($this->getProperty('query'));
 		if ($query) {
 			$c->where(array(
-				'name:LIKE' => "%{$query}%",
+				'uri:LIKE' => "%{$query}%",
+				'OR:pagetitle:LIKE' => "%{$query}%",
+				'OR:longtitle:LIKE' => "%{$query}%",
 				'OR:description:LIKE' => "%{$query}%",
+				'OR:introtext:LIKE' => "%{$query}%",
+				'OR:content:LIKE' => "%{$query}%",
 			));
 		}
 
@@ -92,7 +107,7 @@ class scContentGetListProcessor extends modObjectGetListProcessor
 			'cls' => '',
 			'icon' => "$icon $icon-edit green",
 			'title' => $this->modx->lexicon('staticcontent_action_update'),
-			'action' => 'update',
+			'action' => 'editContent',
 			'button' => true,
 			'menu' => true,
 		);

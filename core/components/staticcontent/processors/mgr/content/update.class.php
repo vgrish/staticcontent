@@ -32,17 +32,18 @@ class scContentUpdateProcessor extends modObjectUpdateProcessor
 	 */
 	public function beforeSet()
 	{
+		$id = (int)$this->getProperty('id');
 		$uri = $this->object->cleanUri($this->getProperty('uri'));
 		$this->setProperty('uri', $uri);
 		if (empty($uri)) {
 			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ns'));
-		} elseif ($this->modx->getCount($this->classKey, array('uri' => $uri))) {
+		} elseif ($this->modx->getCount($this->classKey, array('uri' => $uri, 'id:!=' => $id))) {
 			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
 		}
 
 		$hash = $this->object->getHash($uri);
 		$this->setProperty('hash', $hash);
-		if ($this->modx->getCount($this->classKey, array('hash' => $hash))) {
+		if ($this->modx->getCount($this->classKey, array('hash' => $hash, 'id:!=' => $id))) {
 			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
 		}
 

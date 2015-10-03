@@ -130,6 +130,22 @@ Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
                     }]
                 }]
             }]
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_properties'),
+            checked: false,
+            workCount: 1,
+            listeners: {
+                check: staticcontent.utils.handleChecked,
+                afterrender: staticcontent.utils.handleChecked
+            }
+        }, {
+            xtype: 'textarea',
+            fieldLabel: _('staticcontent_properties'),
+            name: 'properties',
+            anchor: '99%',
+            allowBlank: true
         }];
     },
 
@@ -247,6 +263,24 @@ Ext.extend(staticcontent.window.CreateContent, MODx.Window, {
             boxLabel: _('staticcontent_cacheable'),
             name: 'cacheable',
             checked: false
+        }, {
+            xtype: 'xcheckbox',
+            hideLabel: true,
+            boxLabel: _('staticcontent_context_key'),
+            checked: false,
+            workCount: 1,
+            listeners: {
+                check: staticcontent.utils.handleChecked,
+                afterrender: staticcontent.utils.handleChecked
+            }
+        }, {
+            xtype: 'staticcontent-combo-context',
+            custm: true,
+            clear: true,
+            fieldLabel: _('staticcontent_context_key'),
+            name: 'context_key',
+            anchor: '99%',
+            allowBlank: false
         }, {
             xtype: 'xcheckbox',
             hideLabel: true,

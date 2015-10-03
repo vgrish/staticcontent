@@ -108,3 +108,13 @@ staticcontent.utils.handleChecked = function(checkbox) {
     }
     return true;
 };
+
+staticcontent.utils.renderReplace = function(value, replace) {
+    if (!value) {
+        return '';
+    }
+    else if (!replace) {
+        return value;
+    }
+    return String.format('<span>{0}</span>', replace);
+};
