@@ -60,4 +60,8 @@ class scContent extends xPDOSimpleObject
 		return $xpdo->call('modResource', 'filterPathSegment', array(&$xpdo, $segment, $options));
 	}
 
+	public function getHash($uri)
+	{
+		return md5($uri);
+	}
 }

@@ -15,15 +15,15 @@ class scContentCreateProcessor extends modObjectCreateProcessor
 	 */
 	public function beforeSet()
 	{
-		$uri = mb_strtolower(trim($this->getProperty('uri')), 'UTF-8');
+		$uri = $this->object->cleanUri($this->getProperty('uri'));
 		$this->setProperty('uri', $uri);
 		if (empty($uri)) {
-			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_uri'));
+			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ns'));
 		} elseif ($this->modx->getCount($this->classKey, array('uri' => $uri))) {
 			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
 		}
 
-		$hash = $this->getProperty('hash', md5($uri));
+		$hash = $this->object->getHash($uri);
 		$this->setProperty('hash', $hash);
 		if ($this->modx->getCount($this->classKey, array('hash' => $hash))) {
 			$this->modx->error->addField('uri', $this->modx->lexicon('staticcontent_err_ae'));
