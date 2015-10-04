@@ -17,8 +17,9 @@ class staticcontent
 	/* @var array $initialized */
 	public $initialized = array();
 
-	/* @var Jevix $jevix */
-	public $jevix;
+	/* @var Qevix $qevix */
+	public $qevix;
+	public $qevixConfig = array();
 
 	/**
 	 * @param modX $modx
@@ -87,10 +88,10 @@ class staticcontent
 	{
 		$this->config = array_merge($this->config, $scriptProperties);
 		$this->config['ctx'] = $ctx;
-		if (!$this->jevix) {
-			$this->loadJevix();
+		if (!$this->qevix) {
+			$this->loadQevix();
 		}
-		$this->setJevixParams();
+		$this->setQevixParams();
 		if (!empty($this->initialized[$ctx])) {
 			return true;
 		}
@@ -99,24 +100,24 @@ class staticcontent
 	}
 
 	/**
-	 * Loads an instance of Jevix
+	 * Loads an instance of Qevix
 	 *
 	 * @return boolean
 	 */
-	public function loadJevix()
+	public function loadQevix()
 	{
-		require_once dirname(__FILE__) . '/lib/jevix/jevix.class.php';
+		require_once dirname(__FILE__) . '/lib/qevix/qevix.php';
 
-		if (!is_object($this->jevix) OR !($this->jevix instanceof Jevix)) {
-			$this->jevix = new Jevix();
+		if (!is_object($this->qevix) OR !($this->qevix instanceof Qevix)) {
+			$this->qevix = new Qevix();
 		}
-		return !empty($this->jevix) && $this->jevix instanceof Jevix;
+		return !empty($this->qevix) && $this->qevix instanceof Qevix;
 	}
 
 	/*
-	 * from https://github.com/bezumkin/modx-jevix/blob/master/core/components/jevix/model/jevix/jevix.class.php#L28
+	 * from https://github.com/bezumkin/modx-jevix/blob/master/core/components/jevix/model/qevix/jevix.class.php#L28
 	 */
-	public function processJevix($text = '')
+	public function processQevix($text = '')
 	{
 		if (empty($text)) {
 			return '';
@@ -129,11 +130,10 @@ class staticcontent
 			ini_set('error_reporting', -1);
 			$this->modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
 		}
-		$this->setJevixParams($this->config);
 		$errors = null;
-		$text = $this->jevix->parse($text, $errors);
+		$text = $this->qevix->parse($text, $errors);
 		if (!empty($errors) && !empty($this->config['logErrors'])) {
-			$this->modx->log(modX::LOG_LEVEL_ERROR, 'Jevix errors: ' . print_r($errors, true));
+			$this->modx->log(modX::LOG_LEVEL_ERROR, 'Qevix errors: ' . print_r($errors, true));
 		}
 		if (!empty($this->config['debug'])) {
 			ini_set('display_errors', $display_errors);
@@ -143,77 +143,23 @@ class staticcontent
 		return $text;
 	}
 
-	/**
-	 * @param array $params
-	 *
-	 * from https://github.com/bezumkin/modx-jevix/blob/master/core/components/jevix/model/jevix/jevix.class.php#L84
-	 *
+	/*
+	 * Загружает конфиг Qevix
 	 */
-	public function setJevixParams(array $params = array())
+	public function setQevixParams($qevixType = 'default', $qevixConfigClear = true)
 	{
-		// Allowed tags
-		if (isset($params['cfgAllowTags'])) {
-			$this->setJevixParam('cfgAllowTags', array_map('trim', explode(',', $params['cfgAllowTags'])));
-			unset($params['cfgAllowTags']);
+		if ($qevixConfigClear) {
+			$this->qevix->tagsRules = array();
 		}
-		// Other settings
-		foreach ($params as $k => $v) {
-			if (strpos($k, 'cfg') === false) {
-				continue;
-			} elseif (!method_exists($this, $k)) {
-				$this->modx->log(modX::LOG_LEVEL_ERROR, 'Error on Jevix init. There is no method ' . $k);
-				continue;
-			} elseif (is_bool($v)) {
-				$this->setJevixParam($k, $v);
-			} elseif (empty($v)) {
-				continue;
-			} elseif (is_string($v) && $v[0] != '{' && $v[0] != '[') {
-				$value = array_map('trim', explode(',', $v));
-				$this->setJevixParam($k, $value);
-			} else {
-				$value = $this->modx->fromJSON($v);
-				switch ($k) {
-					case 'cfgAllowTagParams':
-					case 'cfgSetTagParamsRequired':
-						foreach ($value as $k2 => $v2) {
-							try {
-								$this->jevix->$k($k2, $v2);
-							} catch (Exception $ex) {
-								$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
-							}
-						}
-						break;
-					case 'cfgSetAutoReplace':
-					case 'cfgSetAutoPregReplace':
-						if (count($value) != 2) {
-							continue;
-						}
-						try {
-							$this->jevix->$k($value[0], $value[1]);
-						} catch (Exception $ex) {
-							$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
-						}
-						break;
-					case 'cfgSetTagChilds':
-						foreach ($value as $tmp) {
-							try {
-								$this->jevix->$k($tmp[0], $tmp[1], $tmp[2], $tmp[3]);
-							} catch (Exception $ex) {
-								$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
-							}
-						}
-						break;
-					case 'cfgSetTagParamDefault':
-						foreach ($value as $tmp) {
-							try {
-								$this->jevix->$k($tmp[0], $tmp[1], $tmp[2], $tmp[3]);
-							} catch (Exception $ex) {
-								$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
-							}
-						}
-						break;
-					default:
-						$this->setJevixParam($k, $value);
+		$qConfig = $this->getQevixConfig();
+		if (is_array($qConfig)) {
+			foreach ($qConfig[$qevixType] as $sMethod => $aExec) {
+				foreach ($aExec as $aParams) {
+					if (!method_exists($this->qevix, $sMethod)) {
+						$this->modx->log(modX::LOG_LEVEL_ERROR, 'Error on Qevix init. There is no method ' . $sMethod);
+						continue;
+					}
+					call_user_func_array(array($this->qevix, $sMethod), $aParams);
 				}
 			}
 		}
@@ -223,13 +169,224 @@ class staticcontent
 	 * @param $param
 	 * @param $value
 	 */
-	function setJevixParam($param, $value)
+	function setQevixParam($param, $value)
 	{
 		try {
-			$this->jevix->$param($value);
+			$this->qevix->$param($value);
 		} catch (Exception $ex) {
 			$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
 		}
+	}
+
+	/*
+	 * Дефолтный конфиг Qevix
+	 */
+	protected function getQevixConfig()
+	{
+		$config = array(
+			'default' => array(
+
+				// Разрешённые теги
+				'cfgAllowTags' => array(
+					// вызов метода с параметрами
+					array(
+						array('p', 'ls', 'div', 'cut', 'a', 'img', 'i', 'b', 'u', 's', 'video', 'em', 'strong', 'nobr', 'li', 'ol', 'ul', 'sup', 'abbr', 'sub', 'acronym', 'h3', 'h4', 'h5', 'h6', 'br', 'hr', 'pre', 'code', 'object', 'param', 'embed', 'blockquote', 'iframe', 'table', 'th', 'tr', 'td'),
+					),
+				),
+				// Коротие теги типа
+				'cfgSetTagShort' => array(
+					array(
+						array('br', 'img', 'hr', 'cut', 'ls')
+					),
+				),
+				// Преформатированные теги
+				'cfgSetTagPreformatted' => array(
+					array(
+						array('pre', 'code', 'video')
+					),
+				),
+				// Разрешённые параметры тегов
+				'cfgAllowTagParams' => array(
+					// вызов метода
+
+					# array(
+					# 	'p',
+					# 	array('class')
+					# ),
+					# array(
+					# 	'div',
+					# 	array('class')
+					# ),
+					# array(
+					# 	'h3',
+					# 	array('class')
+					# ),
+					# array(
+					# 	'h4',
+					# 	array('class')
+					# ),
+					# array(
+					# 	'h5',
+					# 	array('class')
+					# ),
+					array(
+						'img',
+						array(
+							'src', 'alt' => '#text', 'title',
+							'align' => array('right', 'left', 'center', 'middle'),
+							'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', /*'class'*/
+							"style" => array(
+								"float",
+								"width",
+							),
+						)
+					),
+					// следующий вызов метода
+					array(
+						'a',
+						array('title', 'href', 'rel' => '#text', 'name' => '#text', 'target' => array('_blank'))
+					),
+					// и т.д.
+					array(
+						'cut',
+						array('name')
+					),
+					array(
+						'object',
+						array('width' => '#int', 'height' => '#int', 'data' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')), 'type' => '#text')
+					),
+					array(
+						'param',
+						array('name' => '#text', 'value' => '#text')
+					),
+					array(
+						'embed',
+						array('src' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')), 'type' => '#text', 'allowscriptaccess' => '#text', 'allowfullscreen' => '#text', 'width' => '#int', 'height' => '#int', 'flashvars' => '#text', 'wmode' => '#text')
+					),
+					array(
+						'acronym',
+						array('title')
+					),
+					array(
+						'abbr',
+						array('title')
+					),
+					array(
+						'iframe',
+						array('width' => '#int', 'height' => '#int', 'src' => array('#domain' => array('youtube.com', 'rutube.ru', 'vimeo.com')))
+					),
+					array(
+						'ls',
+						array('user' => '#text')
+					),
+					array(
+						'td',
+						array('colspan' => '#int', 'rowspan' => '#int', 'align' => array('right', 'left', 'center', 'justify'), 'height' => '#int', 'width' => '#int'/*, 'class'*/)
+					),
+					array(
+						'th',
+						array('colspan' => '#int', 'rowspan' => '#int', 'align' => array('right', 'left', 'center', 'justify'), 'height' => '#int', 'width' => '#int'/*, 'class'*/)
+					),
+					array(
+						'table',
+						array('border' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'align' => array('right', 'left', 'center'), 'height' => '#int', 'width' => '#int'/*, 'class'*/)
+					),
+				),
+				// Параметры тегов являющиеся обязательными
+				'cfgSetTagParamsRequired' => array(
+					array(
+						'img',
+						'src'
+					),
+				),
+				// Теги которые необходимо вырезать из текста вместе с контентом
+				'cfgSetTagCutWithContent' => array(
+					array(
+						array('script', 'style')
+					),
+				),
+				// Вложенные теги
+				'cfgSetTagChilds' => array(
+					array(
+						'ul',
+						array('li'),
+						false,
+						true
+					),
+					array(
+						'ol',
+						array('li'),
+						false,
+						true
+					),
+					array(
+						'object',
+						'param',
+						false,
+						true
+					),
+					array(
+						'object',
+						'embed',
+						false,
+						false
+					),
+					array(
+						'table',
+						array('tr'),
+						false,
+						true
+					),
+					array(
+						'tr',
+						array('td', 'th'),
+						false,
+						true
+					),
+				),
+				// Если нужно оставлять пустые не короткие теги
+				'cfgSetTagIsEmpty' => array(
+					array(
+						array('param', 'embed', 'a', 'iframe')
+					),
+				),
+				// Не нужна авто-расстановка <br>
+				'cfgSetTagNoAutoBr' => array(
+					array(
+						array('ul', 'ol', 'object', 'table', 'tr')
+					)
+				),
+				// Теги с обязательными параметрами
+				'cfgSetTagParamDefault' => array(
+					array(
+						'embed',
+						'wmode',
+						'opaque',
+						true
+					),
+				),
+				// Отключение авто-добавления <br>
+				'cfgSetAutoBrMode' => array(
+					array(
+						false
+					)
+				),
+				'cfgSetTagNoTypography' => array(
+					array(
+						array('code', 'video', 'object')
+					),
+				),
+				// Теги, после которых необходимо пропускать одну пробельную строку
+				'cfgSetTagBlockType' => array(
+					array(
+						array('h4', 'h5', 'h6', 'ol', 'ul', 'blockquote', 'pre')
+					)
+				),
+			),
+
+
+		);
+		return array_merge($config, $this->qevixConfig);
 	}
 
 	/**
@@ -244,6 +401,5 @@ class staticcontent
 			'cacheable', 'resource_override', 'properties', 'actions'))));
 		return $gridFields;
 	}
-
 
 }
