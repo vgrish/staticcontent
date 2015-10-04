@@ -21,6 +21,10 @@ class staticcontent
 	public $qevix;
 	public $qevixConfig = array();
 
+	/* @var HTMLPurifier $purifier */
+	public $purifier;
+	public $purifierConfig = array();
+
 	/**
 	 * @param modX $modx
 	 * @param array $config
@@ -92,6 +96,10 @@ class staticcontent
 			$this->loadQevix();
 		}
 		$this->setQevixParams();
+		if (!$this->purifier) {
+			$this->loadPurifier();
+		}
+		$this->setPurifierParams();
 		if (!empty($this->initialized[$ctx])) {
 			return true;
 		}
@@ -112,6 +120,21 @@ class staticcontent
 			$this->qevix = new Qevix();
 		}
 		return !empty($this->qevix) && $this->qevix instanceof Qevix;
+	}
+
+	/**
+	 * Loads an instance of Qevix
+	 *
+	 * @return boolean
+	 */
+	public function loadPurifier()
+	{
+		require_once dirname(__FILE__) . '/lib/htmlpurifier/library/HTMLPurifier.auto.php';
+
+		if (!is_object($this->purifier) OR !($this->purifier instanceof HTMLPurifier)) {
+			$this->purifier = new HTMLPurifier();
+		}
+		return !empty($this->purifier) && $this->purifier instanceof HTMLPurifier;
 	}
 
 	/*
@@ -141,6 +164,64 @@ class staticcontent
 			$this->modx->setLogLevel($logLevel);
 		}
 		return $text;
+	}
+
+	/*
+	 *
+	 */
+	public function processPurifier($text = '')
+	{
+		if (empty($text)) {
+			return '';
+		}
+		$logLevel = $this->modx->getLogLevel();
+		$display_errors = ini_get('display_errors');
+		$error_reporting = ini_get('error_reporting');
+		if (!empty($this->config['debug'])) {
+			ini_set('display_errors', 1);
+			ini_set('error_reporting', -1);
+			$this->modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
+		}
+		$errors = null;
+		$text = $this->purifier->purify($text);
+		if (!empty($errors) && !empty($this->config['logErrors'])) {
+			$this->modx->log(modX::LOG_LEVEL_ERROR, 'Purifier errors: ' . print_r($errors, true));
+		}
+		if (!empty($this->config['debug'])) {
+			ini_set('display_errors', $display_errors);
+			ini_set('error_reporting', $error_reporting);
+			$this->modx->setLogLevel($logLevel);
+		}
+		return $text;
+	}
+
+	/*
+	 * Загружает конфиг Purifier
+	 */
+	public function setPurifierParams($purifierType = 'default', $purifierConfigClear = true)
+	{
+		if ($purifierConfigClear) {
+			$this->purifier->config = HTMLPurifier_Config::createDefault();
+		}
+		$qConfig = $this->getPurifierConfig();
+		if (is_array($qConfig)) {
+			foreach ($qConfig[$purifierType] as $sMethod => $aExec) {
+				$this->setPurifierParam($sMethod, $aExec);
+			}
+		}
+	}
+
+	/**
+	 * @param $param
+	 * @param $value
+	 */
+	function setPurifierParam($param, $value)
+	{
+		try {
+			$this->purifier->config->set($param, $value);
+		} catch (Exception $ex) {
+			$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
+		}
 	}
 
 	/*
@@ -176,6 +257,15 @@ class staticcontent
 		} catch (Exception $ex) {
 			$this->modx->log(modX::LOG_LEVEL_INFO, $ex);
 		}
+	}
+
+	protected function getPurifierConfig()
+	{
+		$config = array(
+			'default' => array(
+			)
+		);
+		return array_merge($config, $this->purifierConfig);
 	}
 
 	/*
